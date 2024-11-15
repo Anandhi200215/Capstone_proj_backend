@@ -45,7 +45,13 @@ public class TaskController {
     }
 
     // Update task reminder
- 
+    @PatchMapping("/{taskId}/reminder")
+    public Task updateTaskReminder(@PathVariable Long taskId, @RequestBody Task updatedTask) {
+        return taskService.getTaskById(taskId).map(task -> {
+            task.setReminderTime(updatedTask.getReminderTime());
+            return taskService.updateTask(task);
+        }).orElseThrow(() -> new RuntimeException("Task not found"));
+    }
     @DeleteMapping("/{taskId}")
     public void deleteTask(@PathVariable Long taskId) {
         taskService.deleteTask(taskId);
